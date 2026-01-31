@@ -1,0 +1,373 @@
+/* Multi-GPT Popup 样式 */
+:root {
+    --primary: #6366f1;
+    --primary-hover: #4f46e5;
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --error: #ef4444;
+    --bg: #0f0f23;
+    --bg-card: #1a1a2e;
+    --bg-input: #16213e;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+    --border: #334155;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    width: 380px;
+    min-height: 480px;
+}
+
+.container {
+    padding: 16px;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.header h1 {
+    font-size: 20px;
+    font-weight: 600;
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+/* Input Section */
+.input-section {
+    margin-bottom: 16px;
+}
+
+#question {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg-input);
+    color: var(--text);
+    font-size: 14px;
+    resize: vertical;
+    min-height: 80px;
+    transition: border-color 0.2s;
+}
+
+#question:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+#question::placeholder {
+    color: var(--text-muted);
+}
+
+/* 图片预览区域 */
+.image-preview {
+    margin-top: 12px;
+    padding: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+}
+
+.image-preview-wrapper {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+}
+
+.image-preview-wrapper img {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 6px;
+    display: block;
+}
+
+.remove-image-btn {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 50%;
+    background: var(--error);
+    color: white;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.remove-image-btn:hover {
+    background: #dc2626;
+    transform: scale(1.1);
+}
+
+.image-info {
+    margin-top: 8px;
+    display: flex;
+    gap: 12px;
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.image-info span {
+    display: inline-block;
+}
+
+/* 上传按钮区域 */
+.upload-section {
+    margin-top: 10px;
+}
+
+.upload-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 13px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.upload-btn:hover {
+    border-color: var(--primary);
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.upload-btn svg {
+    flex-shrink: 0;
+}
+
+.send-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.2s;
+}
+
+.send-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+}
+
+.send-btn:active {
+    transform: translateY(0);
+}
+
+.send-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Platforms Section */
+.platforms-section {
+    margin-bottom: 16px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.section-header h2 {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.select-all {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.select-all label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+}
+
+.platforms-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.platform-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.platform-item:hover {
+    border-color: var(--primary);
+    background: rgba(99, 102, 241, 0.1);
+}
+
+.platform-item input {
+    margin-right: 8px;
+    accent-color: var(--primary);
+}
+
+.platform-name {
+    flex: 1;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.platform-status {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--border);
+    color: var(--text-muted);
+}
+
+.platform-status.free {
+    background: rgba(34, 197, 94, 0.2);
+    color: var(--success);
+}
+
+.platform-status.logged-in {
+    background: rgba(34, 197, 94, 0.2);
+    color: var(--success);
+}
+
+.platform-status.not-logged {
+    background: rgba(245, 158, 11, 0.2);
+    color: var(--warning);
+}
+
+/* Status Section */
+.status-section {
+    margin-bottom: 16px;
+    padding: 12px;
+    background: var(--bg-card);
+    border-radius: 8px;
+}
+
+.status-section h2 {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.status-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    background: var(--bg-input);
+    border-radius: 6px;
+    font-size: 12px;
+}
+
+.status-item .status-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.status-item.pending .status-icon::after {
+    content: '⏳';
+}
+
+.status-item.success .status-icon::after {
+    content: '✅';
+}
+
+.status-item.error .status-icon::after {
+    content: '❌';
+}
+
+.status-item.typing .status-icon::after {
+    content: '✍️';
+}
+
+/* Login Tips */
+.login-tips {
+    padding: 12px;
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid var(--primary);
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.login-tips h2 {
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.login-tips p {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+/* Footer */
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+}
+
+.footer a {
+    color: var(--text-muted);
+    text-decoration: none;
+}
+
+.footer a:hover {
+    color: var(--primary);
+}
+
+.version {
+    color: var(--text-muted);
+}

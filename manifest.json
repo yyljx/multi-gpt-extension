@@ -1,0 +1,128 @@
+{
+"manifest_version": 3,
+    "name": "Multi-GPT 多AI同步查询",
+    "version": "1.1.0",
+    "description": "一键向多个AI平台发送问题 | v1.1.0 修复千问/DeepSeek/Kimi/豆包输入发送问题",
+    "icons": {
+        "16": "icons/icon16.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
+    },
+    "action": {
+        "default_popup": "popup/popup.html",
+        "default_icon": {
+            "16": "icons/icon16.png",
+            "48": "icons/icon48.png"
+        }
+    },
+    "permissions": [
+        "tabs",
+        "storage",
+        "activeTab",
+        "scripting",
+        "tabGroups"
+    ],
+    "host_permissions": [
+        "https://chatgpt.com/*",
+        "https://gemini.google.com/*",
+        "https://chat.deepseek.com/*",
+        "https://qianwen.com/*",
+        "https://www.qianwen.com/*",
+        "https://tongyi.aliyun.com/*",
+        "https://kimi.moonshot.cn/*",
+        "https://www.kimi.com/*",
+        "https://kimi.com/*",
+        "https://metaso.cn/*",
+        "https://www.metaso.cn/*",
+        "https://yuanbao.tencent.com/*",
+        "https://www.doubao.com/*"
+    ],
+    "background": {
+        "service_worker": "background/service-worker.js"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://chatgpt.com/*"
+            ],
+            "js": [
+                "platforms/chatgpt.js"
+            ],
+            "run_at": "document_idle"
+        },
+        {
+            "matches": [
+                "https://gemini.google.com/*"
+            ],
+            "js": [
+                "platforms/gemini.js"
+            ],
+            "run_at": "document_idle"
+        },
+        {
+            "matches": [
+                "https://chat.deepseek.com/*"
+            ],
+            "js": [
+                "platforms/deepseek.js"
+            ],
+            "run_at": "document_idle"
+        },
+        {
+            "matches": [
+                "https://qianwen.com/*",
+                "https://www.qianwen.com/*",
+                "https://tongyi.aliyun.com/*"
+            ],
+            "js": [
+                "platforms/qianwen.js"
+            ],
+            "run_at": "document_idle"
+        },
+        {
+            "matches": [
+                "https://kimi.moonshot.cn/*",
+                "https://www.kimi.com/*",
+                "https://kimi.com/*"
+            ],
+            "js": [
+                "platforms/kimi.js"
+            ],
+            "run_at": "document_idle"
+        },
+        {
+            "matches": [
+                "https://metaso.cn/*",
+                "https://www.metaso.cn/*"
+            ],
+            "js": [
+                "platforms/metaso.js"
+            ],
+            "run_at": "document_idle"
+        },
+        {
+            "matches": [
+                "https://yuanbao.tencent.com/*"
+            ],
+            "js": [
+                "platforms/yuanbao.js"
+            ],
+            "run_at": "document_idle"
+        },
+        {
+            "matches": [
+                "https://www.doubao.com/*"
+            ],
+            "js": [
+                "platforms/doubao.js"
+            ],
+            "run_at": "document_idle"
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["tests/fixtures/*"],
+            "matches": ["<all_urls>"]
+        }
+    ]
+}

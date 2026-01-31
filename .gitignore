@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test artifacts
+*.png
+*.rar
+*.zip
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build artifacts
+dist/
+build/
+
+# Temporary files
+*.tmp
+*.temp
+.sisyphus/
+
+# Package files (optional - uncomment if you don't want to include lock file)
+# package-lock.json

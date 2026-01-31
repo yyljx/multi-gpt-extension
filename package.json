@@ -1,0 +1,26 @@
+{
+  "name": "multi-gpt-extension",
+  "version": "1.2.0",
+  "description": "Chrome extension to send questions to multiple AI platforms simultaneously with image upload support",
+  "author": "Multi-GPT Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/user/multi-gpt-extension.git"
+  },
+  "keywords": [
+    "chrome-extension",
+    "chatgpt",
+    "gemini",
+    "deepseek",
+    "kimi",
+    "ai",
+    "multi-platform"
+  ],
+  "scripts": {
+    "test": "node --test tests/extension.test.js"
+  },
+  "devDependencies": {
+    "puppeteer": "^22.0.0"
+  }
+}

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-GPT</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🤖 Multi-GPT</h1>
+            <p class="subtitle">多AI同步查询</p>
+        </header>
+
+        <section class="input-section">
+            <textarea id="question" placeholder="输入你的问题...（支持 Ctrl+V 粘贴图片）" rows="4"></textarea>
+            
+            <!-- 图片预览区域 -->
+            <div id="imagePreview" class="image-preview" style="display:none;">
+                <div class="image-preview-wrapper">
+                    <img id="previewImg" src="" alt="预览图片">
+                    <button id="removeImage" class="remove-image-btn" title="删除图片">×</button>
+                </div>
+                <div class="image-info">
+                    <span id="imageName">image.png</span>
+                    <span id="imageSize">0 KB</span>
+                </div>
+            </div>
+
+            <!-- 上传按钮 -->
+            <div class="upload-section">
+                <button id="uploadBtn" class="upload-btn" type="button">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/>
+                        <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    上传图片
+                </button>
+                <input type="file" id="fileInput" accept="image/*" style="display:none;">
+            </div>
+
+            <button id="sendBtn" class="send-btn">
+                <span class="btn-text">发送到选中平台</span>
+                <span class="btn-loading" style="display:none;">发送中...</span>
+            </button>
+        </section>
+
+        <section class="platforms-section">
+            <div class="section-header">
+                <h2>选择平台</h2>
+                <div class="select-all">
+                    <label><input type="checkbox" id="selectAll" checked> 全选</label>
+                </div>
+            </div>
+
+            <div class="platforms-grid">
+                <!-- 无需登录 -->
+                <label class="platform-item" data-platform="metaso">
+                    <input type="checkbox" name="platform" value="metaso" checked>
+                    <span class="platform-name">🔍 秘塔搜索</span>
+                    <span class="platform-status free">免登录</span>
+                </label>
+
+                <label class="platform-item" data-platform="qianwen">
+                    <input type="checkbox" name="platform" value="qianwen" checked>
+                    <span class="platform-name">🌐 通义千问</span>
+                    <span class="platform-status free">免登录</span>
+                </label>
+
+                <!-- 需要登录 -->
+                <label class="platform-item" data-platform="chatgpt">
+                    <input type="checkbox" name="platform" value="chatgpt" checked>
+                    <span class="platform-name">💬 ChatGPT</span>
+                    <span class="platform-status" id="status-chatgpt">检测中</span>
+                </label>
+
+                <label class="platform-item" data-platform="gemini">
+                    <input type="checkbox" name="platform" value="gemini" checked>
+                    <span class="platform-name">✨ Gemini</span>
+                    <span class="platform-status" id="status-gemini">检测中</span>
+                </label>
+
+                <label class="platform-item" data-platform="deepseek">
+                    <input type="checkbox" name="platform" value="deepseek" checked>
+                    <span class="platform-name">🌊 DeepSeek</span>
+                    <span class="platform-status" id="status-deepseek">检测中</span>
+                </label>
+
+                <label class="platform-item" data-platform="kimi">
+                    <input type="checkbox" name="platform" value="kimi" checked>
+                    <span class="platform-name">🌙 Kimi</span>
+                    <span class="platform-status" id="status-kimi">检测中</span>
+                </label>
+
+                <label class="platform-item" data-platform="yuanbao">
+                    <input type="checkbox" name="platform" value="yuanbao" checked>
+                    <span class="platform-name">💎 腾讯元宝</span>
+                    <span class="platform-status" id="status-yuanbao">检测中</span>
+                </label>
+
+                <label class="platform-item" data-platform="doubao">
+                    <input type="checkbox" name="platform" value="doubao" checked>
+                    <span class="platform-name">🫛 豆包</span>
+                    <span class="platform-status" id="status-doubao">检测中</span>
+                </label>
+            </div>
+        </section>
+
+        <section class="status-section" id="statusSection" style="display:none;">
+            <h2>发送状态</h2>
+            <div id="statusList" class="status-list"></div>
+        </section>
+
+        <section class="login-tips" id="loginTips" style="display:none;">
+            <h2>💡 登录建议</h2>
+            <p id="loginTipText"></p>
+        </section>
+
+        <footer class="footer">
+            <a href="#" id="settingsLink">⚙️ 设置</a>
+            <span class="version">v1.0.0</span>
+        </footer>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>

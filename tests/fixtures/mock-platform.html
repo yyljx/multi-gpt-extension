@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mock AI Platform</title>
+</head>
+<body>
+    <h1>Mock AI Platform</h1>
+    <div id="status">Ready</div>
+    <div id="last-question"></div>
+    <textarea id="input" data-testid="question-input" placeholder="Enter question..."></textarea>
+    <button id="submit" data-testid="submit-btn">Send</button>
+    
+    <script>
+        // 监听来自扩展的消息
+        chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+            if (message.action === 'inputQuestion') {
+                document.getElementById('status').textContent = 'Received question';
+                document.getElementById('last-question').textContent = message.question;
+                document.getElementById('input').value = message.question;
+                
+                // 模拟回复完成
+                setTimeout(() => {
+                    document.getElementById('status').textContent = 'Complete';
+                    chrome.runtime.sendMessage({
+                        action: 'queryComplete',
+                        platformId: message.platformId,
+                        success: true
+                    });
+                }, 500);
+                
+                sendResponse({ success: true });
+            }
+            return true;
+        });
+        
+        // 通知扩展页面已就绪
+        chrome.runtime.sendMessage({ action: 'platformReady', platformId: 'mock' });
+    </script>
+</body>
+</html>

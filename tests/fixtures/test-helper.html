@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Multi-GPT Test Helper</title>
+</head>
+<body>
+    <h1>Multi-GPT Test Helper</h1>
+    <div id="tab-info">Loading...</div>
+    <div id="group-info">Loading...</div>
+    <div id="position-delta">0</div>
+    <div id="window-id">Unknown</div>
+    
+    <script>
+        // 查询标签页信息并写入 DOM
+        async function updateTabInfo() {
+            try {
+                const tabs = await chrome.tabs.query({});
+                const groups = await chrome.tabGroups.query({});
+                const currentWindow = await chrome.windows.getCurrent();
+                
+                document.getElementById('tab-info').textContent = JSON.stringify(
+                    tabs.map(t => ({ id: t.id, url: t.url, groupId: t.groupId, index: t.index })),
+                    null, 2
+                );
+                document.getElementById('group-info').textContent = JSON.stringify(groups, null, 2);
+                document.getElementById('window-id').textContent = currentWindow.id;
+            } catch (e) {
+                document.getElementById('tab-info').textContent = 'Error: ' + e.message;
+            }
+        }
+        
+        // 初始加载
+        updateTabInfo();
+        
+        // 每秒更新
+        setInterval(updateTabInfo, 1000);
+        
+        // 暴露刷新函数供测试调用
+        window.refreshTabInfo = updateTabInfo;
+    </script>
+</body>
+</html>
