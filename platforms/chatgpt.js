@@ -251,38 +251,21 @@ async function inputAndSend(question, imageData) {
 }
 
 // 上传图片到 ChatGPT
-// ChatGPT 的上传流程：1. 点击"添加照片"按钮 2. 点击"图片"菜单项 3. 触发 file input
+// 注意：Chrome 扩展的 content script 没有用户激活上下文，不能触发 file chooser
+// 解决方案：直接找到 file input 并设置 files 属性，不点击任何按钮
 async function uploadImage(imageData) {
     console.log(`[Multi-GPT] ${PLATFORM_ID} 开始上传图片`);
 
     try {
-        // 方案1: 直接尝试找到 file input (可能已经存在)
-        let fileInput = await findElement(SELECTORS.fileInput, 1000);
+        // 直接查找页面上所有的 file input（包括隐藏的）
+        let fileInput = document.querySelector('input[type="file"][accept*="image"]') || 
+                        document.querySelector('input[type="file"]');
         
         if (!fileInput) {
-            // 方案2: ChatGPT 新版界面 - 点击"添加照片"按钮弹出菜单
-            console.log(`[Multi-GPT] ${PLATFORM_ID} 尝试点击添加照片按钮...`);
-            const attachBtn = await findElement(SELECTORS.attachButton, 3000);
-            if (attachBtn) {
-                attachBtn.click();
-                await sleep(500);
-                
-                // 查找并点击"图片"菜单项
-                const menuItems = document.querySelectorAll('[role="menuitem"], [class*="menu"] [class*="item"]');
-                for (const item of menuItems) {
-                    const text = item.textContent?.trim() || '';
-                    // 点击"图片"菜单项（不是"创建图片"）
-                    if ((text === '图片' || text === 'Image' || text === 'Photo') && !text.includes('创建')) {
-                        console.log(`[Multi-GPT] ${PLATFORM_ID} 找到"图片"菜单项，点击...`);
-                        item.click();
-                        await sleep(300);
-                        break;
-                    }
-                }
-                
-                // 再次尝试找 file input
-                fileInput = await findElement(SELECTORS.fileInput, 2000);
-            }
+            // 等待一下再试
+            await sleep(1000);
+            fileInput = document.querySelector('input[type="file"][accept*="image"]') || 
+                        document.querySelector('input[type="file"]');
         }
 
         if (!fileInput) {
@@ -290,10 +273,12 @@ async function uploadImage(imageData) {
             return;
         }
 
+        console.log(`[Multi-GPT] ${PLATFORM_ID} 找到 file input:`, fileInput);
+
         // 将 base64 转换为 File 对象
         const file = base64ToFile(imageData.base64, imageData.name);
 
-        // 设置 file input 的 files 属性
+        // 设置 file input 的 files 属性（不触发 click，避免 user activation 错误）
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(file);
         fileInput.files = dataTransfer.files;

@@ -281,47 +281,19 @@ async function inputAndSend(question, imageData) {
 }
 
 // 上传图片到 Kimi
-// Kimi 的上传流程：1. 点击工具栏按钮(.toolkit-trigger-btn) 2. 点击"文件和图片"选项 3. 触发 file input
+// 注意：Chrome 扩展的 content script 没有用户激活上下文，不能触发 file chooser
+// 解决方案：直接找到 file input 并设置 files 属性，不点击任何按钮
 async function uploadImage(imageData) {
     console.log(`[Multi-GPT] ${PLATFORM_ID} 开始上传图片`);
 
     try {
-        // 方案1: 直接尝试找到 file input
-        let fileInput = await findElement(SELECTORS.fileInput, 2000);
+        // 直接查找页面上所有的 file input（包括隐藏的）
+        let fileInput = document.querySelector('input[type="file"]');
         
         if (!fileInput) {
-            // 方案2: Kimi 特殊流程 - 先点击工具栏按钮
-            console.log(`[Multi-GPT] ${PLATFORM_ID} 尝试点击工具栏按钮...`);
-            const toolkitBtn = await findElement(SELECTORS.toolkitButton, 3000);
-            if (toolkitBtn) {
-                toolkitBtn.click();
-                await sleep(500);
-                
-                // 尝试找到"文件和图片"菜单项并点击
-                // 使用正确的选择器：.toolkit-container .title 或 .toolkit-item-content .title
-                const menuItems = document.querySelectorAll('.toolkit-container .title, .toolkit-item-content .title, .toolkit-popover .title, .title');
-                for (const item of menuItems) {
-                    if (item.textContent && item.textContent.includes('文件')) {
-                        console.log(`[Multi-GPT] ${PLATFORM_ID} 找到"文件和图片"菜单项，点击...`);
-                        item.click();
-                        await sleep(500);
-                        break;
-                    }
-                }
-                
-                // 再次尝试找 file input
-                fileInput = await findElement(SELECTORS.fileInput, 2000);
-            }
-        }
-        
-        if (!fileInput) {
-            // 方案3: 尝试点击其他可能的上传按钮
-            const uploadBtn = await findElement(SELECTORS.uploadButton, 2000);
-            if (uploadBtn && uploadBtn.tagName !== 'INPUT') {
-                uploadBtn.click();
-                await sleep(500);
-                fileInput = await findElement(SELECTORS.fileInput, 2000);
-            }
+            // 等待一下再试
+            await sleep(1000);
+            fileInput = document.querySelector('input[type="file"]');
         }
 
         if (!fileInput) {
@@ -329,10 +301,12 @@ async function uploadImage(imageData) {
             return;
         }
 
+        console.log(`[Multi-GPT] ${PLATFORM_ID} 找到 file input:`, fileInput);
+
         // 将 base64 转换为 File 对象
         const file = base64ToFile(imageData.base64, imageData.name);
 
-        // 设置 file input 的 files 属性
+        // 设置 file input 的 files 属性（不触发 click，避免 user activation 错误）
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(file);
         fileInput.files = dataTransfer.files;

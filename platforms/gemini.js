@@ -216,44 +216,19 @@ async function inputAndSend(question, imageData) {
 }
 
 // 上传图片到 Gemini
-// Gemini 的上传流程：1. 点击 "打开文件上传菜单" 2. 点击 "上传文件" 3. file input 弹出
+// 注意：Chrome 扩展的 content script 没有用户激活上下文，不能触发 file chooser
+// 解决方案：直接找到 file input 并设置 files 属性，不点击任何按钮
 async function uploadImage(imageData) {
     console.log(`[Multi-GPT] ${PLATFORM_ID} 开始上传图片`);
 
     try {
-        // 方案1: 尝试找到 file input 并直接设置
-        let fileInput = await findElement(SELECTORS.fileInput, 2000);
+        // 直接查找页面上所有的 file input（包括隐藏的）
+        let fileInput = document.querySelector('input[type="file"]');
         
         if (!fileInput) {
-            // 方案2: Gemini 两步上传流程
-            console.log(`[Multi-GPT] ${PLATFORM_ID} 尝试两步上传流程...`);
-            
-            // 步骤1: 点击 "打开文件上传菜单" 按钮
-            const menuBtn = await findElement(SELECTORS.uploadMenuButton, 3000);
-            if (menuBtn) {
-                console.log(`[Multi-GPT] ${PLATFORM_ID} 点击文件上传菜单按钮`);
-                menuBtn.click();
-                await sleep(500);
-                
-                // 步骤2: 点击 "上传文件" 选项
-                const uploadBtn = await findElement(SELECTORS.uploadFileButton, 2000);
-                if (uploadBtn) {
-                    console.log(`[Multi-GPT] ${PLATFORM_ID} 点击上传文件按钮`);
-                    uploadBtn.click();
-                    await sleep(500);
-                    fileInput = await findElement(SELECTORS.fileInput, 2000);
-                }
-            }
-        }
-        
-        if (!fileInput) {
-            // 方案3: 尝试点击通用上传按钮
-            const uploadBtn = await findElement(SELECTORS.uploadButton, 2000);
-            if (uploadBtn && uploadBtn.tagName !== 'INPUT') {
-                uploadBtn.click();
-                await sleep(500);
-                fileInput = await findElement(SELECTORS.fileInput, 2000);
-            }
+            // 等待一下再试
+            await sleep(1000);
+            fileInput = document.querySelector('input[type="file"]');
         }
 
         if (!fileInput) {
@@ -261,10 +236,12 @@ async function uploadImage(imageData) {
             return;
         }
 
+        console.log(`[Multi-GPT] ${PLATFORM_ID} 找到 file input:`, fileInput);
+
         // 将 base64 转换为 File 对象
         const file = base64ToFile(imageData.base64, imageData.name);
 
-        // 设置 file input 的 files 属性
+        // 设置 file input 的 files 属性（不触发 click，避免 user activation 错误）
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(file);
         fileInput.files = dataTransfer.files;

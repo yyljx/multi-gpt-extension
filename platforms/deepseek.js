@@ -288,33 +288,19 @@ async function disableWebSearch() {
 }
 
 // 上传图片到 DeepSeek
+// 注意：Chrome 扩展的 content script 没有用户激活上下文，不能触发 file chooser
+// 解决方案：直接找到 file input 并设置 files 属性，不点击任何按钮
 async function uploadImage(imageData) {
     console.log(`[Multi-GPT] ${PLATFORM_ID} 开始上传图片`);
 
     try {
-        // 方案1: 直接找到隐藏的 file input
+        // 直接查找页面上所有的 file input（包括隐藏的）
         let fileInput = document.querySelector('input[type="file"]');
         
         if (!fileInput) {
-            // 方案2: 点击上传按钮触发 file chooser
-            console.log(`[Multi-GPT] ${PLATFORM_ID} 尝试点击上传按钮...`);
-            
-            // DeepSeek 的上传按钮是输入框旁边的图标按钮
-            const buttons = document.querySelectorAll('button');
-            for (const btn of buttons) {
-                // 跳过发送按钮（disabled）和深度思考/联网搜索按钮
-                if (btn.disabled) continue;
-                const text = btn.textContent || '';
-                if (text.includes('深度思考') || text.includes('联网搜索')) continue;
-                
-                // 检查是否包含 svg（图标按钮）
-                if (btn.querySelector('svg') && !text.trim()) {
-                    btn.click();
-                    await sleep(500);
-                    fileInput = document.querySelector('input[type="file"]');
-                    if (fileInput) break;
-                }
-            }
+            // 等待一下再试
+            await sleep(1000);
+            fileInput = document.querySelector('input[type="file"]');
         }
 
         if (!fileInput) {
@@ -322,10 +308,12 @@ async function uploadImage(imageData) {
             return;
         }
 
+        console.log(`[Multi-GPT] ${PLATFORM_ID} 找到 file input:`, fileInput);
+
         // 将 base64 转换为 File 对象
         const file = base64ToFile(imageData.base64, imageData.name);
 
-        // 设置 file input 的 files 属性
+        // 设置 file input 的 files 属性（不触发 click，避免 user activation 错误）
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(file);
         fileInput.files = dataTransfer.files;

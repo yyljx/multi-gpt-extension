@@ -148,6 +148,7 @@ npm test
 - 扩展图片上传支持到更多平台：DeepSeek、通义千问、豆包、元宝
 - DeepSeek 上传图片时自动关闭联网搜索功能
 - 修复 Kimi URL 为 www.kimi.com
+- **修复图片上传 "user activation" 错误**：重构上传逻辑，不再触发 file chooser 对话框
 
 ### v1.1.0
 - 新增图片上传功能（支持 ChatGPT、Gemini、Kimi）
